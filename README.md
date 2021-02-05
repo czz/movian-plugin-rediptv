@@ -1,0 +1,1 @@
+# movian-plugin-rediptv ALFA VERSION

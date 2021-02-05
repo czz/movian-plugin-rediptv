@@ -1,0 +1,15 @@
+{
+	"description": "<p>RedIpTv</p>",
+	"author": "czz78", 
+	"homepage": "",
+	"title": "RedIpTv",
+	"synopsis": "RedIpTv",
+	"version": "0.0.2",
+        "file": "rediptv.js",
+	"showtimeVersion": "4.8",
+	"type": "ecmascript",
+	"id": "rediptv",
+	"icon": "logo.png",
+	"category": "video",
+	"apiversion":2
+}
