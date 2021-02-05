@@ -37,7 +37,7 @@ var Rediptv = (function () {
 
     var _BASE_URL = {
                      rediptv: "https://android.rediptv2.com",
-                     richtv: "http://access.richtv1.com/",
+                     richtv: "http://access.richtv1.com",
                      current: null,
                     };
 
@@ -204,7 +204,7 @@ var Rediptv = (function () {
 
         if(res) {
            for(var i in res) {
-
+console.log("UUURRRRLLL"+ res[i].link);
               live.push({ id: res[i].id ?  res[i].id :  0,
                              genre: res[i].category ?  res[i].category :  0,   // maybe we could devide channels by category and save them in a db for faster ui
                              title: res[i].name ? res[i].name :  'Unknown',
