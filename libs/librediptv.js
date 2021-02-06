@@ -99,45 +99,6 @@ var Rediptv = (function () {
     }
 
 
-    /*
-     * Private method req
-     */
-    function _req(url, statuscode) {
-
-        switch(statuscode) {
-            case true:
-        }
-
-        var res = false;
-
-        var s = { method: "GET",
-                  debug: this.options().debug,
-                  //headers: { 'User-Agent' : this.userAgent() },
-                  noFail:true,
-                 };
-
-        try {
-            var v = http.request(url, s);
-            switch(statuscode) {
-                case true:
-                    return v.statuscode;
-                    break;
-                default:
-                    return JSON.parse(v.toString());
-                    break;
-            }
-
-        }
-        catch (e) {
-            _debug.call(this,  e.toString().replace('\n', ''), 'RedIpTv' );
-        }
-
-
-        return res;
-
-    }
-
-
     function _reqEpg() {
 
     }
@@ -145,8 +106,13 @@ var Rediptv = (function () {
 
     function _verifyLoginServer(url){
 
-         var res = _req.call(this,url,true);
-        _debug.call(this, JSON.stringify(res), "RedIpTv:verifyLoginServer")
+        var s = { method: "GET",
+                  debug: this.options().debug,
+                  noFail:true,
+                  noFollow: false,
+                 };
+
+        var res = http.request(url, s).statuscode;
 
         switch(res) {
 
@@ -199,12 +165,29 @@ var Rediptv = (function () {
     Rediptv.prototype.getLive = function (){
 
         var url = this.baseUrl().current;
-        var res = _req.call(this,url,false);
+
+        var res = false;
+
+        var s = { method: "GET",
+                  debug: this.options().debug,
+                  noFail:true,
+                  noFollow: false,
+                 };
+
+        try {
+            var v = http.request(url, s);
+            res = JSON.parse(v.toString());
+
+        }
+        catch (e) {
+            _debug.call(this,  e.toString().replace('\n', ''), 'RedIpTv' );
+        }
+
+
         var live=[];
 
         if(res) {
            for(var i in res) {
-console.log("UUURRRRLLL"+ res[i].link);
               live.push({ id: res[i].id ?  res[i].id :  0,
                              genre: res[i].category ?  res[i].category :  0,   // maybe we could devide channels by category and save them in a db for faster ui
                              title: res[i].name ? res[i].name :  'Unknown',
@@ -218,6 +201,42 @@ console.log("UUURRRRLLL"+ res[i].link);
 
     }
 
+    Rediptv.prototype.getLink = function (url){
+
+        while(true){
+
+            var res = false;
+            var s = { method: "GET",
+                      debug: this.options().debug,
+                      //headers:{'Range': 'bytes=0-'},
+                      noFail:true,
+                      noFollow: true,
+                    };
+
+            try {
+                res = http.request(url, s);
+            }
+            catch (e) {
+                _debug.call(this,  e.toString().replace('\n', ''), 'RedIpTv' );
+            }
+
+            //if(!res) break;
+            if(res.statuscode == 302) {
+                 if(res.headers.hasOwnProperty('Location')) {
+                     url = res.headers['Location'];
+                 }
+                 else {
+                     break;
+                 }
+            }
+            if(res.statuscode == 200) {
+                 return url;
+            }
+        }
+
+        return res;
+
+    }
 
 
     /*

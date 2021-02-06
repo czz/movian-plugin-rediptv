@@ -79,11 +79,11 @@ new page.Route(plugin.id + ":play:(.*):(.*)", function(page, title, url) {
     page.loading = false;
     no_subtitle_scan = true;
     page.type = 'video';
-console.log(title);
     page.source = "videoparams:" + JSON.stringify({
         title: decodeURIComponent(title),
         canonicalUrl: plugin.id + ':play:' + decodeURIComponent(title) + ':' + decodeURIComponent(url),
-        sources: [{url:  decodeURIComponent(url)}],
+        sources: [{url:  rediptv.getLink(decodeURIComponent(url))}],
+
         no_subtitle_scan: no_subtitle_scan
     });
 
